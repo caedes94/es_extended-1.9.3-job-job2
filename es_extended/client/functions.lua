@@ -71,20 +71,12 @@ function ESX.Progressbar(message, length, Options)
 
     print("[^1ERROR^7] ^5ESX Progressbar^7 is Missing!")
 end
+function ESX.ShowNotification(message, type, length)
+    if GetResourceState("esx_notify") ~= "missing" then
+        return exports["esx_notify"]:Notify(type, length, message)
+    end
 
-ESX.ShowNotification = function(msg)
-	if msg == nil then
-		msg = 'Vide !'
-	end
-	exports.bulletin:Send({
-        message = msg,
-        timeout = nil,
-        position = nil,
-        progress = true,
-        theme = "default",
-        exitAnim = nil,
-        flash = false
-   })
+    print("[^1ERROR^7] ^5ESX Notify^7 is Missing!")
 end
     
     
@@ -104,30 +96,17 @@ function ESX.HideUI()
     print("[^1ERROR^7] ^5ESX TextUI^7 is Missing!")
 end
 
-ESX.ShowAdvancedNotification = function(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
-    if sender == nil then
-		sender = "Vide !"
-	elseif subject == nil then
-		subject = "Vide !"
-	elseif msg == nil then
-		msg = "Vide !"
-	elseif textureDict == nil then
-		textureDict = "CHAR_BANK_FLEECA"
-	else
-		sender = sender
-	end
-	exports.bulletin:SendAdvanced({
-		message = msg,
-		title = sender,
-		subject = subject,
-		icon = textureDict,
-		timeout = nil,
-		position = nil,
-		progress = true,
-		theme = "default",
-		exitAnim = nil,
-		flash = false
-	})
+function ESX.ShowAdvancedNotification(sender, subject, msg, textureDict, iconType, flash, saveToBrief, hudColorIndex)
+    if saveToBrief == nil then
+        saveToBrief = true
+    end
+    AddTextEntry('esxAdvancedNotification', msg)
+    BeginTextCommandThefeedPost('esxAdvancedNotification')
+    if hudColorIndex then
+        ThefeedSetNextPostBackgroundColor(hudColorIndex)
+    end
+    EndTextCommandThefeedPostMessagetext(textureDict, textureDict, false, iconType, sender, subject)
+    EndTextCommandThefeedPostTicker(flash or false, saveToBrief)
 end
 
 function ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
